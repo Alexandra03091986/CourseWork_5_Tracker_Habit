@@ -11,6 +11,7 @@ class Habit(models.Model):
         on_delete=models.CASCADE,
         null=True,  # ⬅ ВРЕМЕННО: делаем необязательным
         blank=True,  # ⬅ ВРЕМЕННО
+        related_name="habits",
         verbose_name="Пользователь",
         help_text="Укажите создателя привычки",
     )
