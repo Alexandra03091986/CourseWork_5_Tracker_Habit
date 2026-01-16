@@ -3,6 +3,7 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      UpdateAPIView)
 
 from habits.models import Habit
+from habits.paginations import HabitPagination
 from habits.serializers import HabitSerializer, PublicHabitSerializer
 from users.permissions import IsOwner
 
@@ -21,7 +22,8 @@ class HabitListAPIView(ListAPIView):
     """Контроллер получения списка всех своих привычек."""
     serializer_class = HabitSerializer
     permission_classes = (IsOwner,)
-#     еще дописать фильтры возможно
+    pagination_class = HabitPagination
+
     def get_queryset(self):
         """Возвращает только привычки текущего пользователя."""
         return Habit.objects.filter(user=self.request.user)
@@ -53,3 +55,4 @@ class PublicHabitListAPIView(ListAPIView):
     queryset = Habit.objects.filter(is_published=True)
     serializer_class = PublicHabitSerializer
     permission_classes = []  # Доступно всем, даже без авторизации
+    pagination_class = HabitPagination
