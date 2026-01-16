@@ -19,7 +19,6 @@ class HabitCreateAPIView(CreateAPIView):
 
 class HabitListAPIView(ListAPIView):
     """Контроллер получения списка всех своих привычек."""
-    queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     permission_classes = (IsOwner,)
 #     еще дописать фильтры возможно
@@ -53,4 +52,4 @@ class PublicHabitListAPIView(ListAPIView):
     """ Контроллер получения списка всех публичных привычек."""
     queryset = Habit.objects.filter(is_published=True)
     serializer_class = PublicHabitSerializer
-    # permission_classes = []   # временно
+    permission_classes = []  # Доступно всем, даже без авторизации
