@@ -74,7 +74,6 @@ class Habit(models.Model):
         auto_now_add=True,
         verbose_name='Дата создания'
     )
-
     class Meta:
         verbose_name = 'Привычка'
         verbose_name_plural = 'Привычки'
