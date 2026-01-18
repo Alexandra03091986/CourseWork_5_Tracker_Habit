@@ -6,10 +6,12 @@ from users.serializators import UserSerializer
 
 
 class UserCreateAPIView(CreateAPIView):
+    """Контроллер для регистрации новых пользователей."""
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     def perform_create(self, serializer):
+        """Сохраняет нового пользователя с хэшированным паролем."""
         user = serializer.save(is_active=True)
         user.set_password(user.password)
         user.save()
