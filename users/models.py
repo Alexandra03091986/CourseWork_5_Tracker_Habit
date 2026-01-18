@@ -3,15 +3,9 @@ from django.db import models
 
 
 class User(AbstractUser):
-    username = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        unique=False)
+    username = models.CharField(max_length=50, blank=True, null=True, unique=False)
 
-    email = models.EmailField(
-        unique=True, verbose_name="Почта", help_text="Укажите почту"
-    )
+    email = models.EmailField(unique=True, verbose_name="Почта", help_text="Укажите почту")
     tg_id = models.CharField(
         max_length=50,
         blank=True,

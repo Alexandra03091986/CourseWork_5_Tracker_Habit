@@ -10,15 +10,12 @@ from habits.services import send_telegram_message
 def check_all_habits_and_send_reminders():
     """Проверка всех привычек и отправка напоминаний."""
     # Получаем текущее время
-    now = timezone.localtime()      # Получаем текущее время с учетом часового пояса
-    current_time = now.time()       # Извлекаем только время из даты-времени
-    today = now.date()              # Получение СЕГОДНЯШНЕЙ ДАТЫ
+    now = timezone.localtime()  # Получаем текущее время с учетом часового пояса
+    current_time = now.time()  # Извлекаем только время из даты-времени
+    today = now.date()  # Получение СЕГОДНЯШНЕЙ ДАТЫ
 
     # Находим все привычки с указанным временем и привязанным Telegram
-    habits = Habit.objects.filter(
-        time_start__isnull=False,
-        user__tg_id__isnull=False
-    )
+    habits = Habit.objects.filter(time_start__isnull=False, user__tg_id__isnull=False)
 
     # Проверяем каждую привычку
     for habit in habits:
@@ -29,8 +26,7 @@ def check_all_habits_and_send_reminders():
 
             # Проверяем, совпадает ли текущее время с временем привычки (с допуском ±2 минуты)
             time_diff = abs(
-                (current_time.hour * 60 + current_time.minute) -
-                (habit_time.hour * 60 + habit_time.minute)
+                (current_time.hour * 60 + current_time.minute) - (habit_time.hour * 60 + habit_time.minute)
             )
 
             # Если время совпадает - отправляем напоминание

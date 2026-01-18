@@ -1,6 +1,4 @@
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 
 from habits.models import Habit
 from habits.paginations import HabitPagination
@@ -10,6 +8,7 @@ from users.permissions import IsOwner
 
 class HabitCreateAPIView(CreateAPIView):
     """Контроллер создания привычки."""
+
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
 
@@ -20,6 +19,7 @@ class HabitCreateAPIView(CreateAPIView):
 
 class HabitListAPIView(ListAPIView):
     """Контроллер получения списка всех своих привычек."""
+
     serializer_class = HabitSerializer
     permission_classes = (IsOwner,)
     pagination_class = HabitPagination
@@ -31,6 +31,7 @@ class HabitListAPIView(ListAPIView):
 
 class HabitRetrieveAPIView(RetrieveAPIView):
     """Контроллер получения информации о конкретной привычке."""
+
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     permission_classes = (IsOwner,)
@@ -38,6 +39,7 @@ class HabitRetrieveAPIView(RetrieveAPIView):
 
 class HabitUpdateAPIView(UpdateAPIView):
     """Контроллер обновления информации о привычке."""
+
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     permission_classes = (IsOwner,)
@@ -45,13 +47,15 @@ class HabitUpdateAPIView(UpdateAPIView):
 
 class HabitDestroyAPIView(DestroyAPIView):
     """Контроллер удаления привычки."""
+
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     permission_classes = (IsOwner,)
 
 
 class PublicHabitListAPIView(ListAPIView):
-    """ Контроллер получения списка всех публичных привычек."""
+    """Контроллер получения списка всех публичных привычек."""
+
     queryset = Habit.objects.filter(is_published=True)
     serializer_class = PublicHabitSerializer
     permission_classes = []  # Доступно всем, даже без авторизации

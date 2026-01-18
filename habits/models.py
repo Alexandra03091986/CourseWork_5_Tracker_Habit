@@ -4,7 +4,7 @@ from config.settings import AUTH_USER_MODEL
 
 
 class Habit(models.Model):
-    """ Модель привычки."""
+    """Модель привычки."""
 
     user = models.ForeignKey(
         AUTH_USER_MODEL,
@@ -67,17 +67,17 @@ class Habit(models.Model):
     )
     is_published = models.BooleanField(
         default=False,
-        verbose_name='Публичность',
-        help_text='Признак публичности',
+        verbose_name="Публичность",
+        help_text="Признак публичности",
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата создания'
-    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+
     class Meta:
-        verbose_name = 'Привычка'
-        verbose_name_plural = 'Привычки'
-        ordering = ['-created_at',]
+        verbose_name = "Привычка"
+        verbose_name_plural = "Привычки"
+        ordering = [
+            "-created_at",
+        ]
 
     def __str__(self):
         return f"{self.action} в {self.time_start}"

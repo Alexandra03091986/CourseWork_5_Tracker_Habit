@@ -1,6 +1,7 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = bool(os.getenv('DEBUG') == 'True')
+DEBUG = bool(os.getenv("DEBUG") == "True")
 
 ALLOWED_HOSTS = []
 
@@ -26,7 +27,6 @@ INSTALLED_APPS = [
     "drf_yasg",
     "corsheaders",
     "django_celery_beat",
-
     "users",
     "habits",
 ]
@@ -62,12 +62,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 DATABASES = {
@@ -139,20 +137,20 @@ CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
 
 CELERY_BEAT_SCHEDULE = {
-    'check_all_habits_and_send_reminders': {
-        'task': 'habits.tasks.check_all_habits_and_send_reminders',  # Путь к задаче
-        'schedule': timedelta(minutes=1),# Расписание выполнения задачи (например, каждые 10 минут)
+    "check_all_habits_and_send_reminders": {
+        "task": "habits.tasks.check_all_habits_and_send_reminders",  # Путь к задаче
+        "schedule": timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
     },
 }
 
 # Настройки Telegram
 TELEGRAM_URL = "https://api.telegram.org/bot"
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # Настройки кэша
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://localhost:6379/1',  # Используем базу 1 для кэша
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://localhost:6379/1",  # Используем базу 1 для кэша
     }
 }
