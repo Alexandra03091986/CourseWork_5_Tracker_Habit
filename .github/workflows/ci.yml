@@ -6,7 +6,6 @@ env:
   PYTHON_VERSION: "3.13"
   DOCKER_IMAGE_NAME: "tracker_habit"
 
-
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -108,7 +107,7 @@ jobs:
       run: |
         python manage.py test
 
-  # Сборка Docker-образа. Она  будет собираться только после успешного прохождения тестов
+  # Сборка Docker-образа. Она будет собираться только после успешного прохождения тестов
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -146,30 +145,46 @@ jobs:
           key: ${{ secrets.SSH_KEY_PRIVATE }}
           script: |
             # 1. Переходим в папку проекта
-            cd /home/alexandra/CourseWork_5_Tracker_Habit
-
-            # 2. Останавливаем и удаляем ВСЁ
-            echo "🛑 Останавливаем всё..."
-            docker-compose down -v --remove-orphans 2>/dev/null || true
-            docker rm -f $(docker ps -aq) 2>/dev/null || true
-
-            # 3. Получаем последний образ
-            echo "📥 Получаем новый образ..."
+            cd /home/alexandra/trackerhabit_projects/CourseWork_5_Tracker_Habit
+            
+            # 2. Получаем последние изменения кода
+            git pull origin feature/2_final_task
+            
+            # 3. Получаем новый образ
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
-
-            # 4. Обновляем docker-compose.yml (если нужно)
-            sed -i "s|image: .*/${{ env.DOCKER_IMAGE_NAME }}:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}|" docker-compose.yml || true
-
-            # Запускаем ВЕСЬ стек
-            docker-compose up -d --build
-
-            # Проверяем
+          
+            # 4. Перезапускаем контейнеры с новым образом
+            docker compose down
+            docker compose up -d --build
+            
+            # 5. Проверяем
             sleep 10
-            docker-compose ps
-            curl -I http://localhost || echo "Проверка не удалась"
+            docker compose ps
+            echo "✅ Деплой завершен"
+            
 
-            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
-            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
-            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
-            --env-file /home/alexandra/CourseWork_5_Tracker_Habit/.env \
-            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+#            # 2. Останавливаем и удаляем ВСЁ
+#            echo "🛑 Останавливаем всё..."
+#            docker-compose down -v --remove-orphans 2>/dev/null || true
+#            docker rm -f $(docker ps -aq) 2>/dev/null || true
+#
+#            # 3. Получаем последний образ
+#            echo "📥 Получаем новый образ..."
+#            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+#
+#            # 4. Обновляем docker-compose.yml (если нужно)
+#            sed -i "s|image: .*/${{ env.DOCKER_IMAGE_NAME }}:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}|" docker-compose.yml || true
+#
+#            # Запускаем ВЕСЬ стек
+#            docker-compose up -d --build
+#
+#            # Проверяем
+#            sleep 10
+#            docker-compose ps
+#            curl -I http://localhost || echo "Проверка не удалась"
+#
+#            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
+#            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
+#            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
+#            --env-file /home/alexandra/trackerhabit_projects/CourseWork_5_Tracker_Habit/.env \
+#            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}

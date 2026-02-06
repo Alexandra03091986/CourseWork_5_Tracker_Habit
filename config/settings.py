@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = bool(os.getenv("DEBUG") == "True")
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '158.160.221.93']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '158.160.31.117']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -155,7 +155,7 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",  # Используем базу 1 для кэша
+        "LOCATION": "redis://redis:6379/1",  # Используем базу 1 для кэша
     }
 }
 
