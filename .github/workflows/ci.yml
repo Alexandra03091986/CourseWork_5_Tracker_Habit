@@ -108,29 +108,29 @@ jobs:
       run: |
         python manage.py test
 
-#  # Сборка Docker-образа. Она  будет собираться только после успешного прохождения тестов
-#  build:
-#    needs: test
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      # Получаем код из репозитория
-#      - name: Check out code
-#        uses: actions/checkout@v3
-#
-#      # Авторизуемся в Docker Hub используя секреты
-#      - name: Log in to Docker Hub
-#        run: |
-#          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
-#
-#      # Собираем Docker-образ с тегом на основе последнего коммита
-#      - name: Build Docker image
-#        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
-#
-#      # Отправляем собранный Docker-образ в Docker Hub
-#      - name: Push Docker image to Docker Hub
-#        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
-#
+  # Сборка Docker-образа. Она  будет собираться только после успешного прохождения тестов
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Получаем код из репозитория
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      # Авторизуемся в Docker Hub используя секреты
+      - name: Log in to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      # Собираем Docker-образ с тегом на основе последнего коммита
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
+
+      # Отправляем собранный Docker-образ в Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+
 #  # Отправка Docker-образа на сервер
 #  deploy:  # деплоим только после успешного Docker-образа
 #    needs: build
