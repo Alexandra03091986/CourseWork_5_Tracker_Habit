@@ -143,10 +143,10 @@ jobs:
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USER_SERVER }}
-          key: ${{ secrets.SSH_KEY_PRIVAT }}
+          key: ${{ secrets.SSH_KEY_PRIVATE }}
           script: |
             # 1. Переходим в папку проекта
-            cd /home/alexandra/drf_projects/drf-app-30
+            cd /home/alexandra/CourseWork_5_Tracker_Habit
 
             # 2. Останавливаем и удаляем ВСЁ
             echo "🛑 Останавливаем всё..."
@@ -171,5 +171,5 @@ jobs:
             docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
             docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
             docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
-            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
+            --env-file /home/alexandra/CourseWork_5_Tracker_Habit/.env \
             ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
