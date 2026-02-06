@@ -72,42 +72,42 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-#    steps:
-#    # Получаем код из репозитория
-#    - name: Check out code
-#      uses: actions/checkout@v3
-#
-#    # Устанавливаем Python нужной версии
-#    - name: Set up Python
-#      uses: actions/setup-python@v4
-#      with:
-#        python-version: ${{ env.PYTHON_VERSION }}
-#
-#    # Устанавливаем зависимости проекта
-#    - name: Install dependencies
-#      run: |
-#        python -m pip install --upgrade pip
-#        pip install poetry
-#        poetry config virtualenvs.create false
-#        poetry install --no-root
+    steps:
+    # Получаем код из репозитория
+    - name: Check out code
+      uses: actions/checkout@v3
 
-#    # Устанавливаем зависимости для тестирования
-#    - name: Set up environment variables for tests
-#      env:
-#        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-#      run: |
-#        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
-#        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
-#        echo "DEBUG=False" >> $GITHUB_ENV
+    # Устанавливаем Python нужной версии
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
 
-#    - name: Run migrations
-#      run: |
-#        python manage.py migrate --noinput
-#    # Запускаем тесты
-#    - name: Run tests
-#      run: |
-#        python manage.py test
-#
+    # Устанавливаем зависимости проекта
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry config virtualenvs.create false
+        poetry install --no-root
+
+    # Устанавливаем зависимости для тестирования
+    - name: Set up environment variables for tests
+      env:
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      run: |
+        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
+        echo "DEBUG=False" >> $GITHUB_ENV
+
+    - name: Run migrations
+      run: |
+        python manage.py migrate --noinput
+    # Запускаем тесты
+    - name: Run tests
+      run: |
+        python manage.py test
+
 #  # Сборка Docker-образа. Она  будет собираться только после успешного прохождения тестов
 #  build:
 #    needs: test
