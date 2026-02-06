@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -157,3 +158,21 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379/1",  # Используем базу 1 для кэша
     }
 }
+
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),  # Используем SQLite для тестирования
+        }
+    }
+
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
+
+# CSRF настройки для Docker
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "http://127.0.0.1",
+    "http://web:8000",
+]
