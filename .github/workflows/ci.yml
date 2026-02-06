@@ -131,45 +131,45 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
 
-#  # Отправка Docker-образа на сервер
-#  deploy:  # деплоим только после успешного Docker-образа
-#    needs: build
-#    runs-on: ubuntu-latest
-#
-#    steps:  # Подключение к серверу. Запускает новую версию из свежего Docker-образа
-#      - name: Deploy to Server
-#        uses: appleboy/ssh-action@v0.1.10
-#        # Параметры подключения
-#        with:
-#          host: ${{ secrets.SERVER_IP }}
-#          username: ${{ secrets.SSH_USER_SERVER }}
-#          key: ${{ secrets.SSH_KEY_PRIVAT }}
-#          script: |
-#            # 1. Переходим в папку проекта
-#            cd /home/alexandra/drf_projects/drf-app-30
-#
-#            # 2. Останавливаем и удаляем ВСЁ
-#            echo "🛑 Останавливаем всё..."
-#            docker-compose down -v --remove-orphans 2>/dev/null || true
-#            docker rm -f $(docker ps -aq) 2>/dev/null || true
-#
-#            # 3. Получаем последний образ
-#            echo "📥 Получаем новый образ..."
-#            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
-#
-#            # 4. Обновляем docker-compose.yml (если нужно)
-#            sed -i "s|image: .*/${{ env.DOCKER_IMAGE_NAME }}:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}|" docker-compose.yml || true
-#
-#            # Запускаем ВЕСЬ стек
-#            docker-compose up -d --build
-#
-#            # Проверяем
-#            sleep 10
-#            docker-compose ps
-#            curl -I http://localhost || echo "Проверка не удалась"
+  # Отправка Docker-образа на сервер
+  deploy:  # деплоим только после успешного Docker-образа
+    needs: build
+    runs-on: ubuntu-latest
 
-#            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
-#            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
-#            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
-#            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
-#            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+    steps:  # Подключение к серверу. Запускает новую версию из свежего Docker-образа
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.10
+        # Параметры подключения
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USER_SERVER }}
+          key: ${{ secrets.SSH_KEY_PRIVAT }}
+          script: |
+            # 1. Переходим в папку проекта
+            cd /home/alexandra/drf_projects/drf-app-30
+
+            # 2. Останавливаем и удаляем ВСЁ
+            echo "🛑 Останавливаем всё..."
+            docker-compose down -v --remove-orphans 2>/dev/null || true
+            docker rm -f $(docker ps -aq) 2>/dev/null || true
+
+            # 3. Получаем последний образ
+            echo "📥 Получаем новый образ..."
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+
+            # 4. Обновляем docker-compose.yml (если нужно)
+            sed -i "s|image: .*/${{ env.DOCKER_IMAGE_NAME }}:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}|" docker-compose.yml || true
+
+            # Запускаем ВЕСЬ стек
+            docker-compose up -d --build
+
+            # Проверяем
+            sleep 10
+            docker-compose ps
+            curl -I http://localhost || echo "Проверка не удалась"
+
+            docker stop ${{ env.DOCKER_IMAGE_NAME }} || true
+            docker rm -f ${{ env.DOCKER_IMAGE_NAME }} || true
+            docker run -d --name ${{ env.DOCKER_IMAGE_NAME }} -p 80:8000 \
+            --env-file /home/alexandra/drf_projects/drf-app-30/.env \
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
